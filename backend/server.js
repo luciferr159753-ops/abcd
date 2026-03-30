@@ -25,12 +25,12 @@ app.use('/api/subjects', require('./routes/subjectRoutes'));
 
 // Step 2: Handle any route not matching API by serving React's index.html
 // This allows React Router to work properly on the backend.
-app.get('*', (req, res) => {
+app.use((req, res, next) => {
     // Only handle if it's not a /api request
     if (!req.path.startsWith('/api/')) {
-        res.sendFile(path.join(frontendPath, 'index.html'));
+        res.sendFile(path.resolve(__dirname, '../frontend/dist/index.html'));
     } else {
-        res.status(404).json({ message: 'API route not found' });
+        next(); // Let the 404 handler below take it
     }
 });
 
